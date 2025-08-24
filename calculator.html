@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div class="bg-gray-500 p-6 rounded-lg shadow-md w-72">
+      <div
+        id="display"
+        class="mb-4 p-4 text-right text-2xl font-mono bg-gray-200 rounded"
+      >
+        0
+      </div>
+      <div class="grid grid-cols-4 gap-2">
+     
+        <button class="p-4 bg-gray-300 rounded hover:bg-gray-400 transition">7</button>
+        <button class="p-4 bg-gray-300 rounded hover:bg-gray-400 transition">8</button>
+        <button class="p-4 bg-gray-300 rounded hover:bg-gray-400 transition">9</button>
+        <button class="p-4 bg-orange-400 text-white rounded hover:bg-orange-500 transition">/</button>
+
+      
+        <button class="p-4 bg-gray-300 rounded hover:bg-gray-400 transition">4</button>
+        <button class="p-4 bg-gray-300 rounded hover:bg-gray-400 transition">5</button>
+        <button class="p-4 bg-gray-300 rounded hover:bg-gray-400 transition">6</button>
+        <button class="p-4 bg-orange-400 text-white rounded hover:bg-orange-500 transition">*</button>
+
+       
+        <button class="p-4 bg-gray-300 rounded hover:bg-gray-400 transition">1</button>
+        <button class="p-4 bg-gray-300 rounded hover:bg-gray-400 transition">2</button>
+        <button class="p-4 bg-gray-300 rounded hover:bg-gray-400 transition">3</button>
+        <button class="p-4 bg-orange-400 text-white rounded hover:bg-orange-500 transition">-</button>
+
+        <button class="p-4 bg-gray-300 rounded hover:bg-gray-400 transition">0</button>
+        <button class="p-4 bg-gray-300 rounded hover:bg-gray-400 transition">.</button>
+        <button class="p-4 bg-red-500 text-white rounded hover:bg-red-600 transition" id="clear">C</button>
+        <button class="p-4 bg-orange-400 text-white rounded hover:bg-orange-500 transition">+</button>
+
+        
+        <button class="col-span-4 p-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition" id="equals">=</button>
+      </div>
+    </div>
+
+    <script>
+      const display = document.getElementById("display");
+      const buttons = document.querySelectorAll("button");
+      let currentInput = "";
+      let resultShown = false;
+
+      const isOperator = (char) => ["+", "-", "*", "/"].includes(char);
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const value = button.textContent.trim(); 
+
+          if (value === "C") {
+            currentInput = "";
+            display.textContent = "0";
+            resultShown = false;
+            return;
+          }
+
+          
+          if (value === "=") {
+            try {
+              if (isOperator(currentInput.slice(-1)) || currentInput === "") {
+                display.textContent = "Error";
+                currentInput = "";
+                return;
+              }
+
+              const result = eval(currentInput);
+              display.textContent = result;
+              currentInput = result.toString();
+              resultShown = true;
+            } catch {
+              display.textContent = "Error";
+              currentInput = "";
+            }
+            return;
+          }
+
+          if (resultShown && !isOperator(value)) {
+            currentInput = "";
+            resultShown = false;
+          }
+
+          const lastChar = currentInput.slice(-1);
+
+          if (isOperator(lastChar) && isOperator(value)) {
+            currentInput = currentInput.slice(0, -1) + value;
+          } else {
+            currentInput += value;
+          }
+
+          display.textContent = currentInput;
+        });
+      });
+    </script>
+  </body>
+</html>
